@@ -196,7 +196,7 @@ Tambahkan screenshot halaman berikut pada root repository:
 Tambahkan tautan video demonstrasi pada bagian berikut.
 
 ```text
-[Link Video Demo]
+https://drive.google.com/drive/folders/1BIFGDCP-sJwOQLYLIKMBCh_lEZ7wOQds?usp=sharing
 ```
 
 ---
