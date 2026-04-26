@@ -669,28 +669,28 @@ git checkout week-8
 ## 📸 Dokumentasi Screenshot
 
 ### Main Screen — Network Status Online
-```
+
 ![img.png](img.png)
-```
+
 *Tampilan main screen saat koneksi internet aktif — tidak ada banner*
 
 ### Main Screen — Network Status Offline
-```
+
 ![img_1.png](img_1.png)
 ![img_2.png](img_2.png)
-```
+
 *Banner merah "No Internet Connection" muncul saat Airplane Mode aktif*
 
 ### Settings Screen — Device Info
-```
+
 ![img_3.png](img_3.png)
-```
+
 *Informasi perangkat: Device Name, OS Version, App Version*
 
 ### Settings Screen — Battery Status (BONUS)
-```
+
 ![img_5.png](img_5.png)
-```
+
 *Status baterai: persentase dan status charging*
 
 ---
