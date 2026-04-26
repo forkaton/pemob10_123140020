@@ -34,6 +34,10 @@ kotlin {
 
             // Driver Database untuk Android
             implementation("app.cash.sqldelight:android-driver:2.0.1")
+
+            // Tambahkan 2 baris ini untuk integrasi Koin di Android
+            implementation("io.insert-koin:koin-android:3.5.3")
+            implementation("io.insert-koin:koin-androidx-compose:3.5.3")
         }
 
         iosMain.dependencies {
@@ -61,6 +65,10 @@ kotlin {
             implementation("app.cash.sqldelight:coroutines-extensions:2.0.1")
             implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.0")
             implementation(compose.materialIconsExtended)
+
+            // Tambahkan 2 baris ini untuk Koin Core & Compose
+            implementation("io.insert-koin:koin-core:3.5.3")
+            implementation("io.insert-koin:koin-compose:1.1.2")
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
