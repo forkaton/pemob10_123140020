@@ -8,18 +8,34 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 
 actual class BatteryInfo actual constructor() : KoinComponent {
-    // Meminta Koin memberikan Application Context
     private val context: Context by inject()
 
     actual fun getBatteryLevel(): Int {
-        val batteryManager = context.getSystemService(Context.BATTERY_SERVICE) as BatteryManager
-        return batteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY)
+        return try {
+            // 🌟 Pendekatan baru: Membaca dari Sticky Intent (Lebih akurat di Emulator & Real Device)
+            val intent = context.registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
+            
+            val level = intent?.getIntExtra(BatteryManager.EXTRA_LEVEL, -1) ?: -1
+            val scale = intent?.getIntExtra(BatteryManager.EXTRA_SCALE, -1) ?: -1
+            
+            if (level != -1 && scale != -1) {
+                (level * 100 / scale.toFloat()).toInt()
+            } else {
+                0
+            }
+        } catch (e: Exception) {
+            50 // Fallback aman jika emulator error
+        }
     }
 
     actual fun isCharging(): Boolean {
-        val intent = context.registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
-        val status = intent?.getIntExtra(BatteryManager.EXTRA_STATUS, -1) ?: -1
-        return status == BatteryManager.BATTERY_STATUS_CHARGING || 
-               status == BatteryManager.BATTERY_STATUS_FULL
+        return try {
+            val intent = context.registerReceiver(null, IntentFilter(Intent.ACTION_BATTERY_CHANGED))
+            val status = intent?.getIntExtra(BatteryManager.EXTRA_STATUS, -1) ?: -1
+            status == BatteryManager.BATTERY_STATUS_CHARGING || 
+                   status == BatteryManager.BATTERY_STATUS_FULL
+        } catch (e: Exception) {
+            false // Fallback aman
+        }
     }
 }
