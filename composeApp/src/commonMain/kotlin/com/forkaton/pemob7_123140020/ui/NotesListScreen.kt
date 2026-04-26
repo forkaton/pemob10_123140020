@@ -17,12 +17,15 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.forkaton.pemob7123140020.db.Note
 import com.forkaton.pemob7_123140020.viewmodel.NotesViewModel
+import com.forkaton.pemob7_123140020.ui.NetworkStatusIndicator
+import org.koin.compose.koinInject
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NotesListScreen(
     appName: String = "Ansel Personal App", // Nama Aplikasi Baru Otomatis
-    viewModel: NotesViewModel,
+    // 🌟 Menggunakan koinInject() sebagai pengganti koinViewModel()
+    viewModel: NotesViewModel = koinInject(),
     onNavigateToAddNote: () -> Unit,
     onNavigateToEditNote: (Note) -> Unit,
     onNavigateToSettings: () -> Unit
@@ -48,6 +51,9 @@ fun NotesListScreen(
         }
     ) { paddingValues ->
         Column(modifier = Modifier.fillMaxSize().padding(paddingValues)) {
+            // 1. Letakkan Indikator Jaringan paling atas!
+            NetworkStatusIndicator()
+
             // Kolom Pencarian
             OutlinedTextField(
                 value = searchQuery,

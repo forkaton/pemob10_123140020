@@ -11,6 +11,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.forkaton.pemob7_123140020.local.SettingsManager
+import com.forkaton.pemob7_123140020.ui.DeviceInfoScreen
+import com.forkaton.pemob7_123140020.ui.BatteryInfoScreen
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -113,6 +115,16 @@ fun SettingsScreen(
                     )
                 }
             }
+
+            Spacer(modifier = Modifier.height(24.dp))
+            HorizontalDivider()
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Info Perangkat (Tugas Utama)
+            DeviceInfoScreen()
+            
+            // Info Baterai (Bonus 10%) 🌟
+            BatteryInfoScreen()
         }
     }
 }

@@ -10,18 +10,17 @@ import com.forkaton.pemob7_123140020.local.*
 import com.forkaton.pemob7_123140020.ui.*
 import com.forkaton.pemob7_123140020.viewmodel.NotesViewModel
 import com.russhwolf.settings.Settings
-import com.forkaton.pemob7_123140020.di.appModule
-import org.koin.compose.KoinApplication
+import com.forkaton.pemob7_123140020.di.commonModule
+import com.forkaton.pemob7_123140020.di.platformModule
+import org.koin.compose.KoinContext
+import org.koin.compose.koinInject
 
 enum class ScreenState { List, AddEdit, Settings }
 @Composable
-fun App(databaseDriverFactory: DatabaseDriverFactory) {
-    KoinApplication(application = {
-        modules(appModule)
-    }) {
-        val settingsManager = remember { SettingsManager(Settings()) }
-        val repository = remember { NoteRepository(databaseDriverFactory) }
-        val viewModel = remember { NotesViewModel(repository, settingsManager) }
+fun App() {
+    KoinContext {
+        val settingsManager: SettingsManager = koinInject()
+        val viewModel: NotesViewModel = koinInject()
 
         var currentScreen by remember { mutableStateOf(ScreenState.List) }
         var selectedNoteToEdit by remember { mutableStateOf<Note?>(null) }
@@ -50,10 +49,6 @@ fun App(databaseDriverFactory: DatabaseDriverFactory) {
             // Gunakan Scaffold atau Header dengan Nama Baru
             Surface(color = MaterialTheme.colorScheme.background) {
                 Column {
-                    // Untuk sementara waktu, mari kita panggil DeviceInfoScreen 
-                    // di atas layar utamamu untuk memastikan Latihan 1 & 2 berhasil.
-                    com.forkaton.pemob7_123140020.ui.DeviceInfoScreen()
-
                     when (currentScreen) {
                         ScreenState.List -> {
                             NotesListScreen(
