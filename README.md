@@ -139,12 +139,14 @@ composeApp/src/
 ## 📸 Dokumentasi Pengujian & Coverage
 
 ### 1. Hasil Eksekusi Unit Test (ViewModel, Repository, Settings)
-![Unit Test Results](Capture/unit_test_results.png)
-
+![Unit Test Results](Capture/noterepositorytest.png)
+![Unit Test Results](Capture/notesviewmodeltest.png)
+![Unit Test Results](Capture/settingmanagertest.png)
 ### 2. Hasil Eksekusi UI Test (Compose)
-![UI Test Results](Capture/ui_test_results.png)
+![UI Test Results](Capture/notelistscreentest.png)
 
-### 3. Laporan Code Coverage (97.9%)
-![Coverage Summary](Capture/coverage_report.png)
-![Coverage Details 1](Capture/coverage_details_1.png)
-![Coverage Details 2](Capture/coverage_details_2.png)
+### 3. Combined All Test
+![Combined Test](Capture/combinedtest.png)
+### 4. Laporan Code Coverage (97.9%)
+![Coverage Summary](Capture/coverage.png)
+
