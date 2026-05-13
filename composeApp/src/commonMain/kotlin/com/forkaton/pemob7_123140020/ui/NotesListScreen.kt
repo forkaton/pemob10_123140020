@@ -13,6 +13,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.forkaton.pemob7123140020.db.Note
@@ -45,7 +46,10 @@ fun NotesListScreen(
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = onNavigateToAddNote) {
+            FloatingActionButton(
+                onClick = onNavigateToAddNote,
+                modifier = Modifier.testTag("add_button") // 🌟 Menambahkan testTag untuk kestabilan UI Test
+            ) {
                 Icon(Icons.Default.Add, contentDescription = "Tambah Catatan")
             }
         }
