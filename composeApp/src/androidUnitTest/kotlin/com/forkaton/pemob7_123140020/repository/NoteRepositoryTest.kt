@@ -1,24 +1,30 @@
 package com.forkaton.pemob7_123140020.repository
 
+import com.forkaton.pemob7_123140020.AppDatabase
 import com.forkaton.pemob7_123140020.local.NoteRepository
-import com.forkaton.pemob7123140020.db.Note
+import com.forkaton.pemob7123140020.db.NoteQueries
 import io.mockk.*
 import kotlin.test.*
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.flow.flowOf
 
 class NoteRepositoryTest {
 
-    // Mock dependensi NoteRepository
+    // 🌟 1. MOCK DEPENDENSINYA (DATABASE)
+    private val mockDatabase = mockk<AppDatabase>(relaxed = true)
+    private val mockQueries = mockk<NoteQueries>(relaxed = true)
+    
+    // 🌟 2. KITA BUAT REPOSITORY ASLI
     private lateinit var repository: NoteRepository
 
     @BeforeTest
     fun setup() {
         MockKAnnotations.init(this)
         
-        // Kita menggunakan mockk() dengan relaxed=true agar tidak perlu mendefinisikan 
-        // return value untuk fungsi-fungsi void (seperti insert/update/delete)
-        repository = mockk<NoteRepository>(relaxed = true)
+        // Pastikan database mengembalikan mock queries
+        every { mockDatabase.noteQueries } returns mockQueries
+        
+        // 🌟 3. MASUKKAN MOCK DATABASE KE DALAM REPOSITORY ASLI
+        repository = NoteRepository(mockDatabase) 
     }
 
     @AfterTest
@@ -27,74 +33,60 @@ class NoteRepositoryTest {
     }
 
     @Test
-    fun `getAllNotes harus mengembalikan flow daftar catatan saat dipanggil`() = runTest {
-        // Arrange (Persiapan Data)
+    fun `getAllNotes harus memanggil selectAll pada queries`() = runTest {
         val sortOrder = "Newest"
-        val fakeNotes = listOf(mockk<Note>(relaxed = true)) 
-        val fakeFlow = flowOf(fakeNotes)
-        every { repository.getAllNotes(sortOrder) } returns fakeFlow
-
-        // Act (Aksi/Eksekusi)
-        val result = repository.getAllNotes(sortOrder)
-
-        // Assert (Validasi)
-        assertNotNull(result)
-        verify(exactly = 1) { repository.getAllNotes(sortOrder) }
-    }
-
-    @Test
-    fun `searchNotes harus mengembalikan flow hasil pencarian`() = runTest {
-        // Arrange
-        val query = "test"
-        val fakeNotes = listOf(mockk<Note>(relaxed = true))
-        val fakeFlow = flowOf(fakeNotes)
-        every { repository.searchNotes(query) } returns fakeFlow
-
+        
         // Act
-        val result = repository.searchNotes(query)
+        repository.getAllNotes(sortOrder)
 
         // Assert
-        assertNotNull(result)
-        verify(exactly = 1) { repository.searchNotes(query) }
+        verify { mockQueries.selectAll() }
     }
 
     @Test
-    fun `insertNote harus berhasil memanggil fungsi penyimpanan`() = runTest {
-        // Arrange
+    fun `searchNotes harus memanggil search pada queries`() = runTest {
+        val query = "test"
+        
+        // Act
+        repository.searchNotes(query)
+
+        // Assert
+        verify { mockQueries.search(query) }
+    }
+
+    @Test
+    fun `insertNote harus memanggil insert pada queries`() = runTest {
         val title = "Tugas KMP"
         val content = "Belajar Unit Test"
-        coEvery { repository.insertNote(title, content) } just Runs
 
         // Act
         repository.insertNote(title, content)
 
         // Assert
-        coVerify(exactly = 1) { repository.insertNote(title, content) }
+        verify { mockQueries.insert(title, content, any()) }
     }
 
     @Test
-    fun `updateNote harus memperbarui data catatan`() = runTest {
-        // Arrange
+    fun `updateNote harus memanggil update pada queries`() = runTest {
         val testId = 1L
-        coEvery { repository.updateNote(testId, "Judul", "Konten") } just Runs
+        val title = "Judul"
+        val content = "Konten"
 
         // Act
-        repository.updateNote(testId, "Judul", "Konten")
+        repository.updateNote(testId, title, content)
 
         // Assert
-        coVerify(exactly = 1) { repository.updateNote(testId, "Judul", "Konten") }
+        verify { mockQueries.update(title, content, testId) }
     }
 
     @Test
-    fun `deleteNote harus berhasil menghapus catatan`() = runTest {
-        // Arrange
+    fun `deleteNote harus memanggil delete pada queries`() = runTest {
         val testId = 1L
-        coEvery { repository.deleteNote(testId) } just Runs
 
         // Act
         repository.deleteNote(testId)
 
         // Assert
-        coVerify(exactly = 1) { repository.deleteNote(testId) }
+        verify { mockQueries.delete(testId) }
     }
 }

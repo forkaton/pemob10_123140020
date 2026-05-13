@@ -7,13 +7,11 @@ import com.forkaton.pemob7_123140020.AppDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map // PENTING: Tambahan import untuk sorting list
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
-class NoteRepository(databaseDriverFactory: DatabaseDriverFactory) {
+class NoteRepository(database: AppDatabase) {
 
-    // PERBAIKAN: Gunakan AppDatabase sesuai dengan nama di build.gradle.kts
-    private val database = AppDatabase(databaseDriverFactory.createDriver())
     private val queries = database.noteQueries
 
     // READ & SORTING: Mengambil semua catatan dan langsung mengurutkannya
@@ -23,7 +21,7 @@ class NoteRepository(databaseDriverFactory: DatabaseDriverFactory) {
                 "Oldest" -> list.sortedBy { it.created_at }
                 "A-Z" -> list.sortedBy { it.title.lowercase() }
                 "Z-A" -> list.sortedByDescending { it.title.lowercase() }
-                else -> list // Newest (Default dari SQL)
+                else -> list // Newest
             }
         }
     }
@@ -38,7 +36,6 @@ class NoteRepository(databaseDriverFactory: DatabaseDriverFactory) {
     // CREATE
     suspend fun insertNote(title: String, content: String) {
         withContext(Dispatchers.IO) {
-            // PERBAIKAN FINAL: Gunakan nama absolut dari kotlin.time.Clock untuk mem-bypass error
             val now = kotlin.time.Clock.System.now().toEpochMilliseconds()
             queries.insert(title, content, now)
         }

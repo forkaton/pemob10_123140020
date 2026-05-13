@@ -76,6 +76,8 @@ kotlin {
             implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3") 
             implementation("app.cash.turbine:turbine:1.0.0") 
             implementation("io.insert-koin:koin-test:3.5.3") 
+            // Tambahkan library test untuk Multiplatform Settings
+            implementation("com.russhwolf:multiplatform-settings-test:1.1.1")
         }
 
         // 2. TAMBAHKAN BLOK BARU INI KHUSUS UNTUK MOCKK (Android Unit Test)

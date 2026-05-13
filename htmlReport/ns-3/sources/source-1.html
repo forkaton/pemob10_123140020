@@ -1,0 +1,228 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > NoteRepository</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">com.forkaton.pemob7_123140020.local</a>
+</div>
+
+<h1>Coverage Summary for Class: NoteRepository (com.forkaton.pemob7_123140020.local)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">NoteRepository</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (9/9)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">NoteRepository$deleteNote$2</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">NoteRepository$getAllNotes$$inlined$map$1</td>
+  </tr>
+  <tr>
+    <td class="name">NoteRepository$insertNote$2</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/2)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">NoteRepository$updateNote$2</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (9/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (13/13)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package com.forkaton.pemob7_123140020.local
+&nbsp;
+&nbsp;import app.cash.sqldelight.coroutines.asFlow
+&nbsp;import app.cash.sqldelight.coroutines.mapToList
+&nbsp;import com.forkaton.pemob7123140020.db.Note
+&nbsp;import com.forkaton.pemob7_123140020.AppDatabase
+&nbsp;import kotlinx.coroutines.Dispatchers
+&nbsp;import kotlinx.coroutines.IO
+&nbsp;import kotlinx.coroutines.flow.Flow
+&nbsp;import kotlinx.coroutines.flow.map
+&nbsp;import kotlinx.coroutines.withContext
+&nbsp;
+<b class="fc">&nbsp;class NoteRepository(database: AppDatabase) {</b>
+&nbsp;
+<b class="fc">&nbsp;    private val queries = database.noteQueries</b>
+&nbsp;
+&nbsp;    // READ &amp; SORTING: Mengambil semua catatan dan langsung mengurutkannya
+&nbsp;    fun getAllNotes(sortOrder: String): Flow&lt;List&lt;Note&gt;&gt; {
+<b class="fc">&nbsp;        return queries.selectAll().asFlow().mapToList(Dispatchers.IO).map { list -&gt;</b>
+&nbsp;            when (sortOrder) {
+&nbsp;                &quot;Oldest&quot; -&gt; list.sortedBy { it.created_at }
+&nbsp;                &quot;A-Z&quot; -&gt; list.sortedBy { it.title.lowercase() }
+&nbsp;                &quot;Z-A&quot; -&gt; list.sortedByDescending { it.title.lowercase() }
+&nbsp;                else -&gt; list // Newest
+&nbsp;            }
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    // SEARCH: Mencari catatan
+&nbsp;    fun searchNotes(query: String): Flow&lt;List&lt;Note&gt;&gt; {
+<b class="fc">&nbsp;        return queries.search(query)</b>
+<b class="fc">&nbsp;            .asFlow()</b>
+<b class="fc">&nbsp;            .mapToList(Dispatchers.IO)</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    // CREATE
+&nbsp;    suspend fun insertNote(title: String, content: String) {
+<b class="fc">&nbsp;        withContext(Dispatchers.IO) {</b>
+<b class="fc">&nbsp;            val now = kotlin.time.Clock.System.now().toEpochMilliseconds()</b>
+<b class="fc">&nbsp;            queries.insert(title, content, now)</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    // UPDATE
+&nbsp;    suspend fun updateNote(id: Long, title: String, content: String) {
+<b class="fc">&nbsp;        withContext(Dispatchers.IO) {</b>
+<b class="fc">&nbsp;            queries.update(title = title, content = content, id = id)</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    // DELETE
+&nbsp;    suspend fun deleteNote(id: Long) {
+<b class="fc">&nbsp;        withContext(Dispatchers.IO) {</b>
+<b class="fc">&nbsp;            queries.delete(id)</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-05-13 12:40</div>
+</div>
+</body>
+</html>
