@@ -8,14 +8,16 @@ import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 import org.koin.core.module.Module
 
-// Modul untuk logic yang sama di semua platform
-val commonModule = module {
+// 1. Modul khusus untuk Data (Database, Repository, Preferences)
+val dataModule = module {
     single { SettingsManager(Settings()) }
     single { NoteRepository(get()) }
-    
-    // Ganti viewModelOf menjadi factoryOf
-    factoryOf(::NotesViewModel)
 }
 
-// Deklarasi bahwa setiap platform akan punya modulnya sendiri
+// 2. Modul khusus untuk ViewModel
+val viewModelModule = module {
+    factoryOf(::NotesViewModel) 
+}
+
+// 3. Modul platform spesifik
 expect val platformModule: Module

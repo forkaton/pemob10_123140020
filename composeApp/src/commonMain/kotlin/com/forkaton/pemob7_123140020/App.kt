@@ -10,7 +10,8 @@ import com.forkaton.pemob7_123140020.local.*
 import com.forkaton.pemob7_123140020.ui.*
 import com.forkaton.pemob7_123140020.viewmodel.NotesViewModel
 import com.russhwolf.settings.Settings
-import com.forkaton.pemob7_123140020.di.commonModule
+import com.forkaton.pemob7_123140020.di.dataModule
+import com.forkaton.pemob7_123140020.di.viewModelModule
 import com.forkaton.pemob7_123140020.di.platformModule
 import org.koin.compose.KoinContext
 import org.koin.compose.koinInject

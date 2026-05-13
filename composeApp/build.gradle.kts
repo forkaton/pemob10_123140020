@@ -69,8 +69,27 @@ kotlin {
             implementation("io.insert-koin:koin-core:3.5.3")
             implementation("io.insert-koin:koin-compose:1.1.2")
         }
+
+        // TAHAP 1: SETUP DEPENDENCIES TESTING
         commonTest.dependencies {
-            implementation(libs.kotlin.test)
+            implementation(libs.kotlin.test) 
+            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3") 
+            implementation("app.cash.turbine:turbine:1.0.0") 
+            implementation("io.insert-koin:koin-test:3.5.3") 
+        }
+
+        // 2. TAMBAHKAN BLOK BARU INI KHUSUS UNTUK MOCKK (Android Unit Test)
+        val androidUnitTest by getting {
+            dependencies {
+                implementation("io.mockk:mockk:1.13.9") // Pindahkan MockK ke sini!
+            }
+        }
+
+        val androidInstrumentedTest by getting {
+            dependencies {
+                // Library untuk testing UI Jetpack Compose di Android
+                implementation("androidx.compose.ui:ui-test-junit4:1.6.1")
+            }
         }
     }
 }
@@ -93,6 +112,9 @@ android {
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
+
+        // 🌟 TAMBAHAN UNTUK UI TEST: Menentukan test runner
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     packaging {
         resources {
@@ -112,4 +134,6 @@ android {
 
 dependencies {
     debugImplementation(libs.compose.uiTooling)
+    // 🌟 TAMBAHAN UNTUK UI TEST: Manifest khusus debugging & testing
+    debugImplementation("androidx.compose.ui:ui-test-manifest:1.6.1")
 }
